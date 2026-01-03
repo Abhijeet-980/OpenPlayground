@@ -1,26 +1,310 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Game - OpenPlayground</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+  <body>
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
 
-<body>
     <div class="container">
-        <h1>🎯 Quiz Game</h1>
-        <div id="quiz">
-            <div id="question"></div>
-            <div id="options"></div><button id="next" class="btn">Next Question</button>
+      <!-- Start Screen -->
+      <div id="start-screen" class="screen">
+        <div class="logo">
+          <i class="fas fa-brain"></i>
         </div>
-        <div id="result" class="hidden">
-            <h2>Quiz Complete!</h2>
-            <p id="score"></p><button id="restart" class="btn">Restart Quiz</button>
-        </div><a href="../../index.html" class="back-link">← Back</a>
-    </div>
-    <script src="script.js"></script>
-</body>
+        <h1>Quiz Master</h1>
+        <p class="tagline">Test your knowledge across multiple topics!</p>
 
+        <!-- Category Selection -->
+        <div class="selection-group">
+          <h3><i class="fas fa-folder"></i> Choose Category</h3>
+          <div class="category-grid">
+            <button class="category-btn active" data-category="web">
+              <i class="fas fa-code"></i>
+              <span>Web Dev</span>
+            </button>
+            <button class="category-btn" data-category="science">
+              <i class="fas fa-flask"></i>
+              <span>Science</span>
+            </button>
+            <button class="category-btn" data-category="general">
+              <i class="fas fa-globe"></i>
+              <span>General</span>
+            </button>
+            <button class="category-btn" data-category="math">
+              <i class="fas fa-calculator"></i>
+              <span>Math</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Difficulty Selection -->
+        <div class="selection-group">
+          <h3><i class="fas fa-signal"></i> Select Difficulty</h3>
+          <div class="difficulty-options">
+            <button class="difficulty-btn" data-difficulty="easy">
+              <i class="fas fa-smile"></i>
+              <span class="diff-label">Easy</span>
+              <span class="diff-desc">Basic questions</span>
+            </button>
+            <button class="difficulty-btn active" data-difficulty="medium">
+              <i class="fas fa-meh"></i>
+              <span class="diff-label">Medium</span>
+              <span class="diff-desc">Moderate challenge</span>
+            </button>
+            <button class="difficulty-btn" data-difficulty="hard">
+              <i class="fas fa-skull"></i>
+              <span class="diff-label">Hard</span>
+              <span class="diff-desc">Expert level</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Questions Count -->
+        <div class="selection-group">
+          <h3><i class="fas fa-list-ol"></i> Number of Questions</h3>
+          <div class="count-options">
+            <button class="count-btn" data-count="5">5</button>
+            <button class="count-btn active" data-count="10">10</button>
+            <button class="count-btn" data-count="15">15</button>
+            <button class="count-btn" data-count="20">All</button>
+          </div>
+        </div>
+
+        <!-- Timer Option -->
+        <div class="selection-group">
+          <h3><i class="fas fa-clock"></i> Time per Question</h3>
+          <div class="timer-options">
+            <button class="timer-btn" data-time="0">
+              <i class="fas fa-infinity"></i> No Limit
+            </button>
+            <button class="timer-btn" data-time="15">15 sec</button>
+            <button class="timer-btn active" data-time="30">30 sec</button>
+            <button class="timer-btn" data-time="60">60 sec</button>
+          </div>
+        </div>
+
+        <button id="start-btn" class="btn btn-primary btn-large">
+          <i class="fas fa-play"></i> Start Quiz
+        </button>
+
+        <!-- Stats Preview -->
+        <div class="stats-preview">
+          <div class="stat-item">
+            <i class="fas fa-trophy"></i>
+            <span id="best-score">0</span>
+            <label>Best Score</label>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-gamepad"></i>
+            <span id="games-played">0</span>
+            <label>Games Played</label>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-percentage"></i>
+            <span id="avg-score">0%</span>
+            <label>Avg Score</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Screen -->
+      <div id="quiz-screen" class="screen hidden">
+        <!-- Progress Header -->
+        <div class="quiz-header">
+          <div class="quiz-info">
+            <span class="category-badge" id="current-category">
+              <i class="fas fa-code"></i> Web Dev
+            </span>
+            <span class="difficulty-badge" id="current-difficulty">Medium</span>
+          </div>
+          <button class="btn-icon" id="quit-btn" title="Quit Quiz">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="progress-text">
+            <span
+              >Question <span id="current-num">1</span> of
+              <span id="total-num">10</span></span
+            >
+            <span class="score-display"
+              ><i class="fas fa-star"></i>
+              <span id="current-score">0</span></span
+            >
+          </div>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-container" id="timer-container">
+          <div class="timer-bar">
+            <div class="timer-fill" id="timer-fill"></div>
+          </div>
+          <span class="timer-text" id="timer-text">30s</span>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card">
+          <div class="question-number" id="question-number">Q1</div>
+          <h2 class="question-text" id="question-text">Loading question...</h2>
+        </div>
+
+        <!-- Options -->
+        <div class="options-container" id="options-container">
+          <!-- Options will be inserted here -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="quiz-actions">
+          <button id="skip-btn" class="btn btn-secondary">
+            <i class="fas fa-forward"></i> Skip
+          </button>
+          <button id="next-btn" class="btn btn-primary" disabled>
+            <i class="fas fa-arrow-right"></i> Next
+          </button>
+        </div>
+
+        <!-- Hint (for Easy mode) -->
+        <div class="hint-container hidden" id="hint-container">
+          <button class="hint-btn" id="hint-btn">
+            <i class="fas fa-lightbulb"></i> Use Hint (removes 2 wrong answers)
+          </button>
+        </div>
+      </div>
+
+      <!-- Result Screen -->
+      <div id="result-screen" class="screen hidden">
+        <div class="result-icon" id="result-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h2 class="result-title" id="result-title">Quiz Complete!</h2>
+        <p class="result-subtitle" id="result-subtitle">Great effort!</p>
+
+        <!-- Score Circle -->
+        <div class="score-circle">
+          <svg viewBox="0 0 100 100">
+            <circle class="score-bg" cx="50" cy="50" r="45"></circle>
+            <circle
+              class="score-progress"
+              id="score-circle"
+              cx="50"
+              cy="50"
+              r="45"
+            ></circle>
+          </svg>
+          <div class="score-text">
+            <span class="score-value" id="final-score">0</span>
+            <span class="score-total">/ <span id="final-total">10</span></span>
+          </div>
+        </div>
+
+        <!-- Score Percentage -->
+        <div class="score-percentage" id="score-percentage">0%</div>
+
+        <!-- Stats -->
+        <div class="result-stats">
+          <div class="result-stat correct">
+            <i class="fas fa-check-circle"></i>
+            <span id="correct-count">0</span>
+            <label>Correct</label>
+          </div>
+          <div class="result-stat wrong">
+            <i class="fas fa-times-circle"></i>
+            <span id="wrong-count">0</span>
+            <label>Wrong</label>
+          </div>
+          <div class="result-stat skipped">
+            <i class="fas fa-forward"></i>
+            <span id="skipped-count">0</span>
+            <label>Skipped</label>
+          </div>
+          <div class="result-stat time">
+            <i class="fas fa-clock"></i>
+            <span id="time-taken">0:00</span>
+            <label>Time</label>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="result-actions">
+          <button id="retry-btn" class="btn btn-primary">
+            <i class="fas fa-redo"></i> Play Again
+          </button>
+          <button id="home-btn" class="btn btn-secondary">
+            <i class="fas fa-home"></i> Main Menu
+          </button>
+        </div>
+
+        <!-- Share Section -->
+        <div class="share-section">
+          <h3><i class="fas fa-share-alt"></i> Share Your Score</h3>
+          <div class="share-buttons">
+            <button class="share-btn twitter" id="share-twitter">
+              <i class="fab fa-x-twitter"></i>
+            </button>
+            <button class="share-btn whatsapp" id="share-whatsapp">
+              <i class="fab fa-whatsapp"></i>
+            </button>
+            <button class="share-btn facebook" id="share-facebook">
+              <i class="fab fa-facebook-f"></i>
+            </button>
+            <button class="share-btn copy" id="share-copy">
+              <i class="fas fa-link"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Review Answers -->
+        <button id="review-btn" class="btn btn-outline">
+          <i class="fas fa-list"></i> Review Answers
+        </button>
+      </div>
+
+      <!-- Review Screen -->
+      <div id="review-screen" class="screen hidden">
+        <div class="review-header">
+          <h2><i class="fas fa-list-check"></i> Answer Review</h2>
+          <button class="btn-icon" id="close-review">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="review-list" id="review-list">
+          <!-- Review items will be inserted here -->
+        </div>
+        <button id="back-results-btn" class="btn btn-primary">
+          <i class="fas fa-arrow-left"></i> Back to Results
+        </button>
+      </div>
+
+      <a href="../../index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to Projects
+      </a>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toast-message">Message</span>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>

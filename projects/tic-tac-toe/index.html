@@ -1,21 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe - OpenPlayground</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
 
-<body>
-    <div class="container">
-        <h1>Tic Tac Toe</h1>
-        <div class="game-info">
-            <p id="status">Player X's Turn</p>
-            <button id="restart" class="btn">Restart Game</button>
+  <body>
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="game-wrapper">
+      <!-- Left Panel -->
+      <aside class="left-panel">
+        <div class="panel-section">
+          <h3><i class="fas fa-gamepad"></i> Game Mode</h3>
+          <div class="mode-buttons">
+            <button class="mode-btn active" data-mode="pvp">
+              <i class="fas fa-user-friends"></i>
+              <span>2 Players</span>
+            </button>
+            <button class="mode-btn" data-mode="pvc">
+              <i class="fas fa-robot"></i>
+              <span>vs Computer</span>
+            </button>
+          </div>
         </div>
-        <div class="game-board" id="board">
+
+        <div class="panel-section hidden" id="difficulty-container">
+          <h3><i class="fas fa-sliders-h"></i> Difficulty</h3>
+          <div class="option-buttons">
+            <button class="option-btn active" data-difficulty="easy">
+              <i class="fas fa-smile"></i> Easy
+            </button>
+            <button class="option-btn" data-difficulty="medium">
+              <i class="fas fa-meh"></i> Medium
+            </button>
+            <button class="option-btn" data-difficulty="hard">
+              <i class="fas fa-skull"></i> Hard
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section hidden" id="symbol-container">
+          <h3><i class="fas fa-chess"></i> Play As</h3>
+          <div class="symbol-buttons">
+            <button class="symbol-btn active" data-symbol="X">
+              <i class="fas fa-times"></i> X (First)
+            </button>
+            <button class="symbol-btn" data-symbol="O">
+              <i class="far fa-circle"></i> O (Second)
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section game-rules">
+          <h3><i class="fas fa-info-circle"></i> How to Play</h3>
+          <ul>
+            <li><i class="fas fa-check"></i> Get 3 in a row to win</li>
+            <li><i class="fas fa-check"></i> X always goes first</li>
+            <li><i class="fas fa-check"></i> Block your opponent</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Center Panel - Game Board -->
+      <main class="center-panel">
+        <div class="game-header">
+          <h1><i class="fas fa-hashtag"></i> Tic Tac Toe</h1>
+          <div class="status-bar">
+            <p id="status">
+              <i class="fas fa-play-circle"></i> Player X's Turn
+            </p>
+          </div>
+        </div>
+
+        <div class="game-board-container">
+          <div class="game-board" id="board">
             <div class="cell" data-index="0"></div>
             <div class="cell" data-index="1"></div>
             <div class="cell" data-index="2"></div>
@@ -25,10 +95,102 @@
             <div class="cell" data-index="6"></div>
             <div class="cell" data-index="7"></div>
             <div class="cell" data-index="8"></div>
+          </div>
+          <svg class="winning-line-svg" id="winning-line-svg">
+            <line id="winning-line" x1="0" y1="0" x2="0" y2="0" />
+          </svg>
         </div>
-        <a href="../../index.html" class="back-link">← Back to Projects</a>
-    </div>
-    <script src="script.js"></script>
-</body>
 
+        <a href="../../index.html" class="back-link">
+          <i class="fas fa-arrow-left"></i> Back to Projects
+        </a>
+      </main>
+
+      <!-- Right Panel -->
+      <aside class="right-panel">
+        <div class="panel-section scoreboard">
+          <h3><i class="fas fa-trophy"></i> Scoreboard</h3>
+          <div class="score-cards">
+            <div class="score-card player-x">
+              <div class="score-icon"><i class="fas fa-times"></i></div>
+              <div class="score-info">
+                <span class="score-label" id="player-x-label">Player X</span>
+                <span class="score-value" id="score-x">0</span>
+              </div>
+            </div>
+            <div class="score-card draws">
+              <div class="score-icon"><i class="fas fa-handshake"></i></div>
+              <div class="score-info">
+                <span class="score-label">Draws</span>
+                <span class="score-value" id="score-draws">0</span>
+              </div>
+            </div>
+            <div class="score-card player-o">
+              <div class="score-icon"><i class="far fa-circle"></i></div>
+              <div class="score-info">
+                <span class="score-label" id="player-o-label">Player O</span>
+                <span class="score-value" id="score-o">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section actions">
+          <h3><i class="fas fa-cog"></i> Actions</h3>
+          <div class="action-buttons">
+            <button id="restart" class="action-btn primary">
+              <i class="fas fa-redo-alt"></i> Restart Game
+            </button>
+            <button id="reset-scores" class="action-btn secondary">
+              <i class="fas fa-trash-alt"></i> Reset Scores
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-section share-section hidden" id="share-container">
+    <h3><i class="fas fa-share-alt"></i> Share Victory</h3>
+    <p class="share-text">You won! Share with friends:</p>
+    <div class="share-buttons">
+        <button class="share-btn twitter" id="share-twitter" title="Share on Twitter">
+            <i class="fa-brands fa-x-twitter"></i>
+        </button>
+        <button class="share-btn whatsapp" id="share-whatsapp" title="Share on WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </button>
+        <button class="share-btn facebook" id="share-facebook" title="Share on Facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+        </button>
+        <button class="share-btn telegram" id="share-telegram" title="Share on Telegram">
+            <i class="fa-brands fa-telegram"></i>
+        </button>
+        <button class="share-btn copy" id="share-copy" title="Copy Link">
+            <i class="fa-solid fa-link"></i>
+        </button>
+    </div>
+</div>
+
+        <div class="panel-section quick-stats">
+          <h3><i class="fas fa-chart-bar"></i> Stats</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value" id="total-games">0</span>
+              <span class="stat-label">Total Games</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="win-rate">0%</span>
+              <span class="stat-label">X Win Rate</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toast-message">Copied to clipboard!</span>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
