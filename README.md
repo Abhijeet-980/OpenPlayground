@@ -144,9 +144,7 @@ Looking for inspiration? Try building:
 
 Thanks to all the amazing developers who have contributed to OpenPlayground:
 
-<a href="https://github.com/YadavAkhileshh/OpenPlayground/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=YadavAkhileshh/OpenPlayground" />
-</a>
+[![Contributors](https://contrib.rocks/image?repo=YadavAkhileshh/OpenPlayground)](https://github.com/YadavAkhileshh/OpenPlayground/graphs/contributors)
 
 ## License
 

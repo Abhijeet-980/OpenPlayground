@@ -14,6 +14,24 @@ const savedTheme = localStorage.getItem("theme") || "light";
 html.setAttribute("data-theme", savedTheme);
 updateThemeIcon(savedTheme);
 
+function updateCategoryCounts() {
+    const counts = {};
+
+    allCards.forEach(card => {
+        const cat = card.dataset.category;
+        counts[cat] = (counts[cat] || 0) + 1;
+    });
+
+    filterBtns.forEach(btn => {
+        const cat = btn.dataset.filter;
+        if (cat === "all") {
+            btn.innerText = `All (${allCards.length})`;
+        } else {
+            btn.innerText = `${cat.charAt(0).toUpperCase() + cat.slice(1)} (${counts[cat] || 0})`;
+        }
+    });
+}
+
 toggleBtn.addEventListener("click", () => {
   const newTheme =
     html.getAttribute("data-theme") === "light" ? "dark" : "light";
@@ -87,8 +105,48 @@ let allProjectsData = [];
 const searchInput = document.getElementById("project-search");
 const sortSelect = document.getElementById("project-sort");
 const filterBtns = document.querySelectorAll(".filter-btn");
+
+const clearBtn = document.getElementById("clear-filters");
+
+if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        sortSelect.value = "default";
+        currentCategory = "all";
+        currentPage = 1;
+
+        filterBtns.forEach(b => b.classList.remove("active"));
+        document.querySelector('[data-filter="all"]').classList.add("active");
+
+        renderProjects();
+    });
+}
+
+
 const projectsContainer = document.querySelector(".projects-container");
 const paginationContainer = document.getElementById("pagination-controls");
+
+const allCards = Array.from(document.querySelectorAll(".card"));
+// ===============================
+// Add GitHub link button to cards
+// ===============================
+allCards.forEach(card => {
+    const githubUrl = card.dataset.github;
+    if (!githubUrl) return;
+
+    const githubBtn = document.createElement("a");
+    githubBtn.href = githubUrl;
+    githubBtn.target = "_blank";
+    githubBtn.rel = "noopener noreferrer";
+    githubBtn.className = "github-link";
+    githubBtn.innerHTML = `<i class="ri-github-fill"></i>`;
+
+    // Prevent card click when clicking GitHub button
+    githubBtn.addEventListener("click", e => e.stopPropagation());
+
+    card.style.position = "relative";
+    card.appendChild(githubBtn);
+});
 
 // Fetch Projects from JSON
 async function fetchProjects() {
@@ -360,7 +418,19 @@ function scrollToProjects() {
 }
 
 // ===============================
-// Contributors
+// Init
+// ===============================
+updateCategoryCounts();
+renderProjects();
+
+console.log(
+    "%cWant to contribute? https://github.com/YadavAkhileshh/OpenPlayground",
+    "color:#8b5cf6;font-size:14px"
+);
+
+
+// ===============================
+// Hall of Contributors Logic
 // ===============================
 const contributorsGrid = document.getElementById("contributors-grid");
 
