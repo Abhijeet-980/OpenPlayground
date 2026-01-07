@@ -9,6 +9,16 @@
     "icon": "ri-booklet-line",
     "coverStyle": "background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color:#78350f;"
   },
+  
+  {
+    "title": "Personal Diary",
+    "category": "utility",
+    "description": "A personal diary app to write, view, search, and manage daily entries with local data persistence.",
+    "tech": ["HTML", "CSS", "JavaScript"],
+    "link": "./projects/PersonalDiary/index.html",
+    "icon": "ri-booklet-line",
+    "coverStyle": "background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color:#78350f;"
+  },
 
   {
     "title": "Notes Taking App",
