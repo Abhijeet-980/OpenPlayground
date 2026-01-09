@@ -1,363 +1,330 @@
-const jokes = [
-  {
-    text: "Why do programmers prefer dark mode? Because light attracts bugs.",
-    category: "programming",
-    rating: 0
-  },
-  {
-    text: "I told my computer I needed a break. It froze.",
-    category: "programming",
-    rating: 0
-  },
-  {
-    text: "Debugging: Being the detective in a crime movie where you are also the murderer.",
-    category: "programming",
-    rating: 0
-  },
-  {
-    text: "Why did the JavaScript developer go broke? Because they kept losing their cache.",
-    category: "programming",
-    rating: 0
-  },
-  {
-    text: "Why do Java developers wear glasses? Because they don't C#.",
-    category: "programming",
-    rating: 0
-  },
-  {
-    text: "I'm reading a book on anti-gravity. It's impossible to put down.",
-    category: "puns",
-    rating: 0
-  },
-  {
-    text: "I used to be a baker, but I couldn't make enough dough.",
-    category: "puns",
-    rating: 0
-  },
-  {
-    text: "What do you call a fake noodle? An impasta.",
-    category: "puns",
-    rating: 0
-  },
-  {
-    text: "I'm on a seafood diet. I see food and I eat it.",
-    category: "dad",
-    rating: 0
-  },
-  {
-    text: "Why don't skeletons fight each other? They don't have the guts.",
-    category: "dad",
-    rating: 0
-  },
-  {
-    text: "What do you call a bear with no teeth? A gummy bear.",
-    category: "dad",
-    rating: 0
-  },
-  {
-    text: "My code works. I have no idea why.",
-    category: "programming",
-    rating: 0
-  },
-  {
-    text: "There are only 10 types of people in the world: those who understand binary and those who don't.",
-    category: "programming",
-    rating: 0
-  },
-  {
-    text: "I changed my password to 'incorrect'. Now when I forget it, my computer reminds me.",
-    category: "programming",
-    rating: 0
-  }
-];
-
-const jokeEl = document.getElementById("joke");
-const btn = document.getElementById("jokeBtn");
-const categorySelect = document.getElementById("categorySelect");
-const currentCategoryEl = document.getElementById("currentCategory");
-const ratingContainer = document.getElementById("ratingContainer");
-const stars = document.querySelectorAll(".stars i");
-const ratingText = document.getElementById("ratingText");
-const favoriteBtn = document.getElementById("favoriteBtn");
-const shareBtn = document.getElementById("shareBtn");
-const viewFavoritesBtn = document.getElementById("viewFavoritesBtn");
-const favoritesModal = document.getElementById("favoritesModal");
-const closeModalBtn = document.getElementById("closeModalBtn");
-const favoritesList = document.getElementById("favoritesList");
-const shareNotification = document.getElementById("shareNotification");
-
-let currentJoke = null;
-let currentJokeIndex = -1;
-let favorites = JSON.parse(localStorage.getItem("jokeFavorites")) || [];
-let ratings = JSON.parse(localStorage.getItem("jokeRatings")) || {};
-
-function init() {
-  loadRatings();
-  displayRandomJoke();
-  
-  btn.addEventListener("click", displayRandomJoke);
-  categorySelect.addEventListener("change", displayRandomJoke);
-  favoriteBtn.addEventListener("click", toggleFavorite);
-  shareBtn.addEventListener("click", shareJoke);
-  viewFavoritesBtn.addEventListener("click", showFavorites);
-  closeModalBtn.addEventListener("click", hideFavorites);
-  
-  stars.forEach(star => {
-    star.addEventListener("click", () => rateJoke(star.dataset.rating));
-  });
-  
-  window.addEventListener("click", (e) => {
-    if (e.target === favoritesModal) {
-      hideFavorites();
-    }
-  });
-  
-  updateFavoriteButton();
-}
-
-function displayRandomJoke() {
-  const selectedCategory = categorySelect.value;
-  let filteredJokes = selectedCategory === "all" 
-    ? jokes 
-    : jokes.filter(joke => joke.category === selectedCategory);
-  
-  if (filteredJokes.length === 0) {
-    jokeEl.textContent = "No jokes found for this category. Try another one!";
-    currentCategoryEl.textContent = "Category: None";
-    currentJoke = null;
-    currentJokeIndex = -1;
-    updateRatingDisplay(0);
-    return;
-  }
-  
-  let randomIndex;
-  do {
-    randomIndex = Math.floor(Math.random() * filteredJokes.length);
-  } while (filteredJokes.length > 1 && randomIndex === currentJokeIndex);
-  
-  currentJokeIndex = randomIndex;
-  currentJoke = filteredJokes[randomIndex];
-  
-  jokeEl.textContent = currentJoke.text;
-  
-  const categoryNames = {
-    programming: "Programming",
-    puns: "Puns",
-    dad: "Dad Jokes",
-    all: "All"
-  };
-  currentCategoryEl.textContent = `Category: ${categoryNames[currentJoke.category]}`;
-  
-  const jokeId = getJokeId(currentJoke.text);
-  const rating = ratings[jokeId] || 0;
-  updateRatingDisplay(rating);
-  
-  updateFavoriteButton();
-}
-
-function rateJoke(rating) {
-  if (!currentJoke) return;
-  
-  const jokeId = getJokeId(currentJoke.text);
-  ratings[jokeId] = parseInt(rating);
-  localStorage.setItem("jokeRatings", JSON.stringify(ratings));
-  
-  updateRatingDisplay(rating);
-  showNotification(`Rated ${rating} star${rating > 1 ? 's' : ''}!`);
-}
-
-function updateRatingDisplay(rating) {
-  stars.forEach(star => {
-    const starRating = parseInt(star.dataset.rating);
-    if (starRating <= rating) {
-      star.classList.remove("ri-star-line");
-      star.classList.add("ri-star-fill", "active");
-    } else {
-      star.classList.remove("ri-star-fill", "active");
-      star.classList.add("ri-star-line");
-    }
-  });
-  
-  if (rating > 0) {
-    ratingText.textContent = `Rated ${rating} star${rating > 1 ? 's' : ''}`;
-    ratingText.style.color = "#fbbf24";
-  } else {
-    ratingText.textContent = "Not rated yet";
-    ratingText.style.color = "#94a3b8";
-  }
-}
-
-function loadRatings() {
-  const savedRatings = JSON.parse(localStorage.getItem("jokeRatings")) || {};
-  ratings = savedRatings;
-}
-
-function toggleFavorite() {
-  if (!currentJoke) return;
-  
-  const jokeId = getJokeId(currentJoke.text);
-  const existingIndex = favorites.findIndex(fav => fav.id === jokeId);
-  
-  if (existingIndex >= 0) {
-    favorites.splice(existingIndex, 1);
-    showNotification("Removed from favorites");
-  } else {
-    favorites.push({
-      id: jokeId,
-      text: currentJoke.text,
-      category: currentJoke.category
-    });
-    showNotification("Added to favorites!");
-  }
-  
-  localStorage.setItem("jokeFavorites", JSON.stringify(favorites));
-  
-  updateFavoriteButton();
-}
-
-function updateFavoriteButton() {
-  if (!currentJoke) {
-    favoriteBtn.disabled = true;
-    favoriteBtn.innerHTML = '<i class="ri-heart-line"></i> Add to Favorites';
-    favoriteBtn.classList.remove("favorited");
-    return;
-  }
-  
-  const jokeId = getJokeId(currentJoke.text);
-  const isFavorite = favorites.some(fav => fav.id === jokeId);
-  
-  if (isFavorite) {
-    favoriteBtn.innerHTML = '<i class="ri-heart-fill"></i> Remove Favorite';
-    favoriteBtn.classList.add("favorited");
-  } else {
-    favoriteBtn.innerHTML = '<i class="ri-heart-line"></i> Add to Favorites';
-    favoriteBtn.classList.remove("favorited");
-  }
-  
-  favoriteBtn.disabled = false;
-}
-
-function shareJoke() {
-  if (!currentJoke) return;
-  
-  const jokeText = encodeURIComponent(currentJoke.text);
-  const shareUrl = `${window.location.origin}${window.location.pathname}?joke=${jokeText}`;
-  
-  navigator.clipboard.writeText(shareUrl)
-    .then(() => {
-      showNotification("Joke link copied to clipboard!");
-    })
-    .catch(err => {
-      console.error("Failed to copy: ", err);
-      const tempInput = document.createElement("input");
-      tempInput.value = shareUrl;
-      document.body.appendChild(tempInput);
-      tempInput.select();
-      document.execCommand("copy");
-      document.body.removeChild(tempInput);
-      showNotification("Joke link copied to clipboard!");
-    });
-}
-
-function showFavorites() {
-  if (favorites.length === 0) {
-    favoritesList.innerHTML = '<li style="text-align: center; color: #94a3b8;">No favorite jokes yet.</li>';
-  } else {
-    favoritesList.innerHTML = "";
+class JokeGenerator {
+  constructor() {
+    this.jokes = [];
+    this.currentJoke = null;
+    this.currentRating = 0;
+    this.userRatings = JSON.parse(localStorage.getItem('jokeRatings')) || {};
+    this.favorites = JSON.parse(localStorage.getItem('favoriteJokes')) || [];
     
-    favorites.forEach((favorite, index) => {
-      const li = document.createElement("li");
+    // DOM Elements
+    this.jokeEl = document.getElementById('joke');
+    this.categoryEl = document.getElementById('jokeCategory');
+    this.jokeBtn = document.getElementById('jokeBtn');
+    this.categoryFilter = document.getElementById('categoryFilter');
+    this.stars = document.querySelectorAll('.stars i');
+    this.averageRatingEl = document.getElementById('averageRating');
+    this.favoriteBtn = document.getElementById('favoriteBtn');
+    this.shareBtn = document.getElementById('shareBtn');
+    this.favoritesList = document.getElementById('favoritesList');
+    
+    this.init();
+  }
+  
+  async init() {
+    await this.loadJokes();
+    this.setupEventListeners();
+    this.displayRandomJoke();
+    this.loadFavorites();
+  }
+  
+  async loadJokes() {
+    try {
+      const response = await fetch('jokes.json');
+      const data = await response.json();
+      this.jokes = data.jokes;
+    } catch (error) {
+      console.error('Error loading jokes:', error);
+      // Fallback to default jokes
+      this.jokes = [
+        { text: "Why do programmers prefer dark mode? Because light attracts bugs.", category: "programming", rating: 4.2 },
+        { text: "I told my computer I needed a break. It froze.", category: "programming", rating: 3.8 },
+        { text: "Debugging: Being the detective in a crime movie where you are also the murderer.", category: "programming", rating: 4.5 },
+        { text: "I'm reading a book on anti-gravity. It's impossible to put down!", category: "puns", rating: 3.9 },
+        { text: "Why don't eggs tell jokes? They'd crack each other up.", category: "dad jokes", rating: 3.7 }
+      ];
+    }
+  }
+  
+  setupEventListeners() {
+    // New Joke Button
+    this.jokeBtn.addEventListener('click', () => this.displayRandomJoke());
+    
+    // Category Filter
+    this.categoryFilter.addEventListener('change', () => this.displayRandomJoke());
+    
+    // Rating Stars
+    this.stars.forEach(star => {
+      star.addEventListener('click', (e) => this.rateJoke(e.target.dataset.rating));
+      star.addEventListener('mouseover', (e) => this.hoverRating(e.target.dataset.rating));
+      star.addEventListener('mouseout', () => this.resetStarDisplay());
+    });
+    
+    // Favorite Button
+    this.favoriteBtn.addEventListener('click', () => this.toggleFavorite());
+    
+    // Share Button
+    this.shareBtn.addEventListener('click', () => this.shareJoke());
+  }
+  
+  getFilteredJokes() {
+    const selectedCategory = this.categoryFilter.value;
+    if (selectedCategory === 'all') {
+      return this.jokes;
+    }
+    return this.jokes.filter(joke => joke.category === selectedCategory);
+  }
+  
+  displayRandomJoke() {
+    const filteredJokes = this.getFilteredJokes();
+    
+    if (filteredJokes.length === 0) {
+      this.jokeEl.textContent = "No jokes found for this category. Try another category!";
+      this.categoryEl.textContent = "";
+      this.currentJoke = null;
+      this.updateRatingDisplay(null);
+      this.updateFavoriteButton();
+      return;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * filteredJokes.length);
+    this.currentJoke = filteredJokes[randomIndex];
+    
+    this.jokeEl.textContent = this.currentJoke.text;
+    this.categoryEl.textContent = this.currentJoke.category;
+    
+    this.updateRatingDisplay(this.currentJoke);
+    this.updateFavoriteButton();
+  }
+  
+  rateJoke(rating) {
+    if (!this.currentJoke) return;
+    
+    this.currentRating = parseInt(rating);
+    const jokeId = this.currentJoke.text;
+    this.userRatings[jokeId] = this.currentRating;
+    
+    // Update average rating
+    const existingRatings = this.currentJoke.userRatings || [];
+    existingRatings.push(this.currentRating);
+    this.currentJoke.userRatings = existingRatings;
+    
+    // Calculate new average
+    const totalRatings = existingRatings.length;
+    const sumRatings = existingRatings.reduce((a, b) => a + b, 0);
+    const averageRating = (this.currentJoke.rating + (sumRatings / totalRatings)) / 2;
+    
+    // Save to localStorage
+    localStorage.setItem('jokeRatings', JSON.stringify(this.userRatings));
+    
+    // Update display
+    this.updateStarDisplay(this.currentRating);
+    this.averageRatingEl.textContent = `Average: ${averageRating.toFixed(1)}/5 (${totalRatings} ratings)`;
+    
+    // Show success message
+    Toastify({
+      text: `Rated ${this.currentRating} stars!`,
+      duration: 2000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "linear-gradient(to right, #38bdf8, #6366f1)",
+    }).showToast();
+  }
+  
+  hoverRating(rating) {
+    this.updateStarDisplay(parseInt(rating));
+  }
+  
+  resetStarDisplay() {
+    if (this.currentRating > 0) {
+      this.updateStarDisplay(this.currentRating);
+    } else {
+      this.updateStarDisplay(0);
+    }
+  }
+  
+  updateStarDisplay(rating) {
+    this.stars.forEach(star => {
+      const starRating = parseInt(star.dataset.rating);
+      if (starRating <= rating) {
+        star.classList.add('active');
+        star.classList.remove('ri-star-line');
+        star.classList.add('ri-star-fill');
+      } else {
+        star.classList.remove('active');
+        star.classList.remove('ri-star-fill');
+        star.classList.add('ri-star-line');
+      }
+    });
+  }
+  
+  updateRatingDisplay(joke) {
+    if (!joke) {
+      this.updateStarDisplay(0);
+      this.averageRatingEl.textContent = "Not rated yet";
+      return;
+    }
+    
+    const jokeId = joke.text;
+    const userRating = this.userRatings[jokeId] || 0;
+    this.currentRating = userRating;
+    
+    const totalRatings = joke.userRatings ? joke.userRatings.length + 1 : 1;
+    const averageRating = joke.userRatings ? 
+      (joke.rating + (joke.userRatings.reduce((a, b) => a + b, 0) / joke.userRatings.length)) / 2 : 
+      joke.rating;
+    
+    this.updateStarDisplay(userRating);
+    this.averageRatingEl.textContent = `Average: ${averageRating.toFixed(1)}/5 (${totalRatings} ratings)`;
+  }
+  
+  toggleFavorite() {
+    if (!this.currentJoke) return;
+    
+    const jokeText = this.currentJoke.text;
+    const index = this.favorites.findIndex(fav => fav.text === jokeText);
+    
+    if (index === -1) {
+      // Add to favorites
+      this.favorites.push({
+        text: this.currentJoke.text,
+        category: this.currentJoke.category,
+        addedAt: new Date().toISOString()
+      });
+      this.favoriteBtn.innerHTML = '<i class="ri-heart-fill"></i>';
+      this.favoriteBtn.classList.add('active');
       
-      const categoryNames = {
-        programming: "Programming",
-        puns: "Puns",
-        dad: "Dad Jokes"
-      };
+      Toastify({
+        text: "Added to favorites!",
+        duration: 2000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "linear-gradient(to right, #dc2626, #ef4444)",
+      }).showToast();
+    } else {
+      // Remove from favorites
+      this.favorites.splice(index, 1);
+      this.favoriteBtn.innerHTML = '<i class="ri-heart-line"></i>';
+      this.favoriteBtn.classList.remove('active');
       
-      li.innerHTML = `
-        <div class="favorite-joke-text">${favorite.text}</div>
-        <div style="display: flex; align-items: center;">
-          <span class="favorite-joke-category">${categoryNames[favorite.category] || favorite.category}</span>
-          <button class="remove-favorite" data-index="${index}">
-            <i class="ri-delete-bin-line"></i>
-          </button>
-        </div>
+      Toastify({
+        text: "Removed from favorites",
+        duration: 2000,
+        gravity: "top",
+        position: "right",
+      }).showToast();
+    }
+    
+    // Save to localStorage and update display
+    localStorage.setItem('favoriteJokes', JSON.stringify(this.favorites));
+    this.loadFavorites();
+  }
+  
+  updateFavoriteButton() {
+    if (!this.currentJoke) {
+      this.favoriteBtn.innerHTML = '<i class="ri-heart-line"></i>';
+      this.favoriteBtn.classList.remove('active');
+      return;
+    }
+    
+    const isFavorite = this.favorites.some(fav => fav.text === this.currentJoke.text);
+    if (isFavorite) {
+      this.favoriteBtn.innerHTML = '<i class="ri-heart-fill"></i>';
+      this.favoriteBtn.classList.add('active');
+    } else {
+      this.favoriteBtn.innerHTML = '<i class="ri-heart-line"></i>';
+      this.favoriteBtn.classList.remove('active');
+    }
+  }
+  
+  shareJoke() {
+    if (!this.currentJoke) return;
+    
+    const shareText = `${this.currentJoke.text} #JokeGenerator`;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?joke=${encodeURIComponent(this.currentJoke.text)}`;
+    
+    // Create a temporary input element
+    const tempInput = document.createElement('input');
+    tempInput.value = `${shareText}\n\n${shareUrl}`;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999); // For mobile devices
+    
+    // Copy the text
+    try {
+      document.execCommand('copy');
+      Toastify({
+        text: "Joke link copied to clipboard!",
+        duration: 2000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "linear-gradient(to right, #10b981, #059669)",
+      }).showToast();
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      Toastify({
+        text: "Failed to copy. Please try again.",
+        duration: 2000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "linear-gradient(to right, #dc2626, #ef4444)",
+      }).showToast();
+    }
+    
+    // Clean up
+    document.body.removeChild(tempInput);
+  }
+  
+  loadFavorites() {
+    this.favoritesList.innerHTML = '';
+    
+    if (this.favorites.length === 0) {
+      this.favoritesList.innerHTML = '<div class="empty-favorites">No favorite jokes yet</div>';
+      return;
+    }
+    
+    this.favorites.forEach((favorite, index) => {
+      const favoriteItem = document.createElement('div');
+      favoriteItem.className = 'favorite-item';
+      
+      favoriteItem.innerHTML = `
+        <div class="favorite-text">${favorite.text}</div>
+        <button class="remove-favorite" data-index="${index}">
+          <i class="ri-close-line"></i>
+        </button>
       `;
       
-      favoritesList.appendChild(li);
+      this.favoritesList.appendChild(favoriteItem);
     });
     
-    document.querySelectorAll(".remove-favorite").forEach(button => {
-      button.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const index = parseInt(button.dataset.index);
-        removeFavorite(index);
+    // Add event listeners to remove buttons
+    document.querySelectorAll('.remove-favorite').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const index = parseInt(e.currentTarget.dataset.index);
+        this.removeFavorite(index);
       });
     });
   }
   
-  favoritesModal.style.display = "flex";
-}
-
-function hideFavorites() {
-  favoritesModal.style.display = "none";
-}
-
-function removeFavorite(index) {
-  favorites.splice(index, 1);
-  localStorage.setItem("jokeFavorites", JSON.stringify(favorites));
-  
-  updateFavoriteButton();
-  showFavorites();
-  showNotification("Removed from favorites");
-}
-
-function showNotification(message) {
-  shareNotification.textContent = message;
-  shareNotification.classList.add("show");
-  
-  setTimeout(() => {
-    shareNotification.classList.remove("show");
-  }, 2000);
-}
-
-function getJokeId(jokeText) {
-  return jokeText.substring(0, 30).replace(/\s+/g, '-').toLowerCase();
-}
-
-function checkUrlForJoke() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const jokeParam = urlParams.get('joke');
-  
-  if (jokeParam) {
-    const decodedJoke = decodeURIComponent(jokeParam);
+  removeFavorite(index) {
+    this.favorites.splice(index, 1);
+    localStorage.setItem('favoriteJokes', JSON.stringify(this.favorites));
+    this.loadFavorites();
     
-    const existingJoke = jokes.find(joke => joke.text === decodedJoke);
-    
-    if (existingJoke) {
-      currentJoke = existingJoke;
-      jokeEl.textContent = currentJoke.text;
-      
-      categorySelect.value = currentJoke.category;
-      const categoryNames = {
-        programming: "Programming",
-        puns: "Puns",
-        dad: "Dad Jokes"
-      };
-      currentCategoryEl.textContent = `Category: ${categoryNames[currentJoke.category]}`;
-      
-      const jokeId = getJokeId(currentJoke.text);
-      const rating = ratings[jokeId] || 0;
-      updateRatingDisplay(rating);
-      
-      updateFavoriteButton();
-      
-      window.history.replaceState({}, document.title, window.location.pathname);
+    // Update favorite button if current joke was removed
+    if (this.currentJoke && this.favorites.every(fav => fav.text !== this.currentJoke.text)) {
+      this.updateFavoriteButton();
     }
+    
+    Toastify({
+      text: "Removed from favorites",
+      duration: 2000,
+      gravity: "top",
+      position: "right",
+    }).showToast();
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  init();
-  checkUrlForJoke();
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new JokeGenerator();
 });
