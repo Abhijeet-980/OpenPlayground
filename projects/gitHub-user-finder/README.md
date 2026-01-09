@@ -6,12 +6,6 @@ A responsive web app to search GitHub profiles in real time using the GitHub RES
 
 ![Demo Screenshot](./assets/demo.png) <!-- Add demo.png or a GIF to your repo for best effect -->
 
-## 🌐 Live Demo
-
-Try it online: [GitHub User Finder Live](https://your-live-demo-link.com) <!-- Replace with your actual live URL -->
-
----
-
 ## 🚀 Features
 
 - **Search any GitHub user by username**
@@ -53,18 +47,7 @@ Try it online: [GitHub User Finder Live](https://your-live-demo-link.com) <!-- R
 └── README.md
 ```
 
----
 
-## ⚡ Quick Start
-
-1. **Clone the repo:**
-   ```sh
-   git clone
-   ```
-2. **Open `index.html` in your browser.**
-   - No build steps required.
-
----
 
 ## 📖 Usage
 
