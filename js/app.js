@@ -383,7 +383,6 @@ async function fetchContributors() {
         console.warn('Contributors Load Error:', error);
         grid.innerHTML = `<div class="loading-msg">Unable to load contributors.</div>`;
     }
-}
 
 /**
  * Global Bookmark Toggle Wrapper

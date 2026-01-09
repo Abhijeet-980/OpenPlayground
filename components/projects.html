@@ -4,6 +4,7 @@
         <span class="section-badge">Explore</span>
         <h2 class="section-title">Featured <span class="gradient-text">Projects</span></h2>
         <p class="section-subtitle">Discover amazing projects built by our community</p>
+    
     </div>
 
     <!-- Search, Sort and View Controls -->
@@ -29,6 +30,15 @@
             </button>
             <button id="list-view-btn" class="view-btn" title="List View">
                 <i class="ri-list-check"></i>
+            </button>
+        </div>
+        <!-- View Toggle Buttons -->
+        <div class="view-toggle">
+            <button id="card-view-btn" class="view-btn active" aria-label="Card view" title="Card View">
+                <i class="ri-grid-fill"></i>
+            </button>
+            <button id="list-view-btn" class="view-btn" aria-label="List view" title="List View">
+                <i class="ri-list-unordered"></i>
             </button>
         </div>
     </div>
@@ -77,8 +87,19 @@
 
     <!-- Empty State -->
     <div id="empty-state" class="empty-state" style="display: none;">
-        <div class="empty-icon">📂</div>
-        <h3>No projects found!</h3>
+        <div class="empty-icon">🔍</div>
+        <h3>No projects found</h3>
         <p>Try adjusting your search or filter criteria</p>
     </div>
+
+    <!-- View More Button -->
+    <div class="view-more-container" id="view-more-container">
+        <button id="view-more-btn" class="view-more-btn">
+            <i class="ri-arrow-down-line"></i> View More Projects
+            <span id="remaining-count"></span>
+        </button>
+    </div>
+
+    <!-- Pagination (alternative to View More) -->
+    <div id="pagination-controls" class="pagination-container" style="display: none;"></div>
 </section>
