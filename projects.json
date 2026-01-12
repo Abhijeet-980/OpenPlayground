@@ -171,6 +171,19 @@
     "icon": "ri-notification-4-line",
     "coverStyle": "background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); color:#ffffff;"
   },
+   {
+    "title": "Alarm Clock App",
+    "category": "utility",
+    "description": "A sleek alarm clock application with multiple alarm settings, snooze functionality, and customizable tones.",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "link": "./projects/Alarm-app/index.html",
+    "icon": "ri-alarm-line",
+    "coverStyle": "background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%); color:#ffffff;"
+  },
   {
     "title": "Attention Drift Visualizer",
     "category": "productivity",
