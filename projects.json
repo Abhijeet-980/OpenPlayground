@@ -1731,8 +1731,8 @@
   "link": "./projects/github-profile-score-finder/index.html",
   "icon": "ri-github-line",
   "coverStyle": "background: linear-gradient(135deg, #24292e 0%, #57606a 100%);"
-}
-]
+},
+{
   "title": "Internet Speed Tester",
   "category": "utility",
   "description": "Test your internet speed with this interactive tool.",
@@ -1740,7 +1740,7 @@
   "link": "./projects/internet-speed-tester/index.html",
   "icon": "ri-palette-line",
   "coverStyle": "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;"
-},
+},{
     "title": "Internet Speed Tester",
     "category": "utility",
     "description": "Test your internet speed with this interactive tool.",
@@ -2484,3 +2484,4 @@
   "icon": "ri-compass-3-line",
   "coverStyle": "background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;"
 }
+]
