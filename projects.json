@@ -2574,5 +2574,20 @@
   "link": "./projects/emoji-invaders/index.html",
   "icon": "ri-gamepad-line",
   "coverStyle": "background: linear-gradient(135deg, #ff6a00 0%, #ee0979 100%); color: white;"
+},
+{
+  "title": "GitHub Repo Analyzer",
+  "category": "utility",
+  "description": "Paste any GitHub repository URL to instantly extract key insights like tech stack, commit activity, contributors, and project health.",
+  "tech": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "GitHub API"
+  ],
+  "link": "./projects/github-repo-analyzer/index.html",
+  "icon": "ri-github-line",
+  "coverStyle": "background: linear-gradient(135deg, #2f2f2f 0%, #6b7280 100%); color: white;"
 }
+
 ]
