@@ -6883,5 +6883,16 @@
 "link": "./projects/CPU Scheduling Visualizer/index.html",
 "icon": "ri-cpu-line",
 "coverStyle": "background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #020617 100%); color: #e5e7eb;"
+},
+{
+  "title": "MistakeRunner",
+  "category": "game",
+  "description": "A fast-paced browser game where players learn by making and reacting to mistakes in real time.",
+  "tech": ["HTML", "CSS", "JavaScript"],
+  "link": "./projects/mistakerunner/index.html",
+  "icon": "ri-run-line",
+  "coverStyle": "background: linear-gradient(135deg, #fee2e2 0%, #fecaca 50%, #fde68a 100%); color: #7c2d12;"
 }
+
+
 ]
