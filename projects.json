@@ -4,6 +4,10 @@
     "category": "utility",
     "difficulty": "Beginner",
     "description": "Discover random learning topics to spark curiosity and exploration. Get suggestions for concepts, skills, and ideas across programming, science, creativity, languages, and life skills.",
+    "title": "Daily Affirmation Card",
+    "category": "utility",
+    "difficulty": "Beginner",
+    "description": "A calming daily affirmation app that displays one positive affirmation each day. Features a minimal, typography-focused design with streak tracking, share functionality, and automatic daily updates.",
     "tech": [
       "HTML",
       "CSS",
@@ -13,6 +17,9 @@
     "link": "./projects/RandomLearningTopicPicker/index.html",
     "icon": "ri-lightbulb-flash-line",
     "coverStyle": "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;"
+    "link": "./projects/DailyAffirmationCard/index.html",
+    "icon": "ri-heart-line",
+    "coverStyle": "background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fcd34d 100%); color: #78350f;"
   },
   {
     "title": "Pixel Art Studio",
@@ -61,21 +68,36 @@
   "icon": "ri-calendar-check-line",
   "coverStyle": "background: linear-gradient(135deg, #b5eaea 0%, #a8d8ea 50%, #ffd3b6 100%); color: #5a6b8c;"
 },
+    "title": "365 Days No-Zero Tracker",
+    "category": "productivity",
+    "difficulty": "Beginner",
+    "description": "A visual productivity tracker based on the No-Zero Days philosophy. Mark daily progress, maintain streaks, view monthly calendars, and stay motivated with dynamic quotes.",
+    "tech": [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "LocalStorage",
+      "Date API"
+    ],
+    "link": "./projects/NoZeroTracker/index.html",
+    "icon": "ri-calendar-check-line",
+    "coverStyle": "background: linear-gradient(135deg, #b5eaea 0%, #a8d8ea 50%, #ffd3b6 100%); color: #5a6b8c;"
+  },
   {
-  "title": "Random Mini Challenge Generator",
-  "category": "productivity",
-  "description": "Generate small, achievable challenges to encourage healthy breaks with friendly UI and progress tracking.",
-  "tech": [
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "LocalStorage"
-  ],
-  "link": "./projects/ChallengeGenerator/index.html",
-  "icon": "ri-gamepad-line",
-  "coverStyle": "background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #5a6782;"
-},
-    {
+    "title": "Random Mini Challenge Generator",
+    "category": "productivity",
+    "description": "Generate small, achievable challenges to encourage healthy breaks with friendly UI and progress tracking.",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "LocalStorage"
+    ],
+    "link": "./projects/ChallengeGenerator/index.html",
+    "icon": "ri-gamepad-line",
+    "coverStyle": "background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #5a6782;"
+  },
+  {
     "title": "Sphere of Contributors",
     "category": "utility",
     "difficulty": "Intermediate",
@@ -131,6 +153,34 @@
     "icon": "ri-timer-line",
     "coverStyle": "background: linear-gradient(135deg, #4a6fa5 0%, #8fb8e6 100%); color: white;"
   },
+    "title": "Micro Journal",
+    "category": "utility",
+    "difficulty": "Intermediate",
+    "description": "A tactile, book-style minimalist journal with interactive date bookmarks and focus-driven Zen Mode.",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "LocalStorage"
+    ],
+    "link": "./projects/micro journal/index.html",
+    "icon": "ri-book-3-line",
+    "coverStyle": "background: linear-gradient(135deg, #4E342E 0%, #6D4C41 100%); color: #FFFDF8;"
+  },
+  {
+  "title": "Minimal Countdown",
+  "category": "utility",
+  "difficulty": "Intermediate",
+  "description": "A visually minimal countdown timer that represents time using animated concentric circles and progress rings for hours, minutes, and seconds. Features smooth transitions, start/pause/reset controls, responsive design, and an intuitive visual time experience.",
+  "tech": [
+    "HTML",
+    "CSS",
+    "JavaScript"
+  ],
+  "link": "./projects/MinimalCountdown/index.html",
+  "icon": "ri-timer-line",
+  "coverStyle": "background: linear-gradient(135deg, #4a6fa5 0%, #8fb8e6 100%); color: white;"
+},
   {
     "title": "365 Days Progress Tracker",
     "category": "utility",
@@ -351,6 +401,19 @@
     "coverClass": "tictactoe-cover"
   },
   {
+    "title": "Dianosur",
+    "category": "puzzle",
+    "description": "dianosur game ",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "link": "./projects/dianosur/index.html",
+    "icon": "ri-dinosaur-line",
+    "coverClass": "quiz-cover"
+  },
+  {
     "title": "Fun balloon popping game",
     "category": "game",
     "description": "A colorful balloon popping game where players click on balloons to pop them and score points within a time limit.",
@@ -361,6 +424,19 @@
     ],
     "link": "./projects/fun-ballon-pop-game/index.html",
     "icon": "ri-focus-line",
+    "coverStyle": "background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;"
+  },
+  {
+    "title": "Stick With Hero Game",
+    "category": "game",
+    "description": "A simple and engaging stick hero game where players control a character to build sticks and cross platforms while avoiding obstacles.",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "link": "./projects/stick-with-hero/index.html",
+    "icon": "ri-walk-line",
     "coverStyle": "background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white;"
   },
   {
@@ -2875,9 +2951,9 @@
     "coverStyle": "background: linear-gradient(135deg, #ff7043 0%, #ffab91 100%); color: white;"
   },
   {
-    "title": "Simon Game",
+    "title": "Simon Says Game",
     "category": "game",
-    "description": "Classic Simon Says memory game with color sequences and increasing difficulty levels.",
+    "description": "Classic Simon Says memory game with smooth sound effects, circular design, and high score tracking.",
     "tech": [
       "HTML",
       "CSS",
@@ -2885,7 +2961,7 @@
     ],
     "link": "./projects/simon-game/index.html",
     "icon": "ri-record-circle-line",
-    "coverStyle": "background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;"
+    "coverStyle": "background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;"
   },
   {
     "title": "Solar System Simulation",
@@ -3393,13 +3469,30 @@
 ]
   },
   {
-  "title": "UI As Enemy",
-  "category": "fun",
-  "description": "An experimental game where the user interface itself acts as the main antagonist.",
-  "tech": ["HTML", "CSS", "JavaScript"],
-  "link": "./projects/ui-as-enemy/index.html",
-  "icon": "ri-bug-line",
-  "coverStyle": "background: linear-gradient(135deg, #1f2933 0%, #111827 100%); color: #f9fafb;"
-}
-
+    "title": "UI As Enemy",
+    "category": "fun",
+    "description": "An experimental game where the user interface itself acts as the main antagonist.",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "link": "./projects/ui-as-enemy/index.html",
+    "icon": "ri-bug-line",
+    "coverStyle": "background: linear-gradient(135deg, #1f2933 0%, #111827 100%); color: #f9fafb;"
+  },
+  {
+    "title": "CPU Scheduling Visualizer",
+    "category": "utility",
+    "difficulty": "Advanced",
+    "description": "An interactive CPU scheduling visualizer that helps users understand how common scheduling algorithms work. Users can define processes, select algorithms, and watch animated Gantt chart execution with calculated waiting and turnaround times for educational clarity.",
+    "tech": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "link": "./projects/CPU Scheduling Visualizer/index.html",
+    "icon": "ri-cpu-line",
+    "coverStyle": "background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #020617 100%); color: #e5e7eb;"
+  }
 ]
