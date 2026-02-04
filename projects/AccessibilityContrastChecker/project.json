@@ -1,8 +1,8 @@
 {
   "title": "Accessibility Contrast Checker (WCAG)",
   "category": "utility",
-  "difficulty": "Intermediate",
-  "description": "A comprehensive WCAG accessibility tool that calculates contrast ratios, validates AA/AAA compliance, provides live text previews, and suggests accessible color alternatives.",
+  "difficulty": "Advanced",
+  "description": "A comprehensive WCAG accessibility tool featuring DOM scanning to detect contrast violations, element highlighting with keyboard navigation, accessible color suggestions, AA/AAA compliance checking, and JSON/CSV export capabilities.",
   "tech": [
     "HTML",
     "CSS",

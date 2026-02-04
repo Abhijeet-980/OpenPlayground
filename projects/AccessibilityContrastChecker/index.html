@@ -40,6 +40,177 @@
     </header>
 
     <main class="app-main">
+        <!-- DOM Scanner Section -->
+        <section class="scanner-section" aria-labelledby="scanner-heading">
+            <h2 id="scanner-heading" class="section-title">
+                <i class="ri-search-eye-line"></i>
+                DOM Contrast Scanner
+                <span class="beta-badge">NEW</span>
+            </h2>
+
+            <div class="scanner-controls-card">
+                <div class="scanner-toolbar">
+                    <div class="scanner-input-group">
+                        <label for="scanSelector">Target Selector (optional)</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="scanSelector" class="color-input"
+                                placeholder="body, .content, #main..."
+                                aria-label="CSS selector to limit scanning scope" />
+                        </div>
+                    </div>
+
+                    <div class="scanner-toggles">
+                        <div class="toggle-group">
+                            <span class="toggle-label">WCAG Level</span>
+                            <div class="toggle-buttons" role="radiogroup" aria-label="WCAG compliance level">
+                                <button class="toggle-btn active" data-level="AA" role="radio"
+                                    aria-checked="true">AA</button>
+                                <button class="toggle-btn" data-level="AAA" role="radio"
+                                    aria-checked="false">AAA</button>
+                            </div>
+                        </div>
+
+                        <div class="toggle-group">
+                            <span class="toggle-label">Text Size</span>
+                            <div class="toggle-buttons" role="radiogroup" aria-label="Text size mode">
+                                <button class="toggle-btn active" data-size="normal" role="radio"
+                                    aria-checked="true">Normal</button>
+                                <button class="toggle-btn" data-size="large" role="radio"
+                                    aria-checked="false">Large</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="scan-btn" id="scanPageBtn">
+                        <i class="ri-radar-line"></i>
+                        <span>Scan Page</span>
+                        <span class="scan-shortcut">D</span>
+                    </button>
+                </div>
+
+                <div class="scanner-status" id="scannerStatus" aria-live="polite">
+                    <i class="ri-information-line"></i>
+                    <span>Click "Scan Page" to analyze contrast ratios of all visible elements</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scan Results Section -->
+        <section class="results-section" id="resultsSection" aria-labelledby="results-heading" hidden>
+            <h2 id="results-heading" class="section-title">
+                <i class="ri-file-list-3-line"></i>
+                Scan Results
+                <div class="results-summary" id="resultsSummary"></div>
+            </h2>
+
+            <div class="results-card">
+                <div class="results-tabs" role="tablist">
+                    <button class="results-tab active" data-tab="failing" role="tab" aria-selected="true">
+                        <i class="ri-error-warning-line"></i>
+                        Failing Elements
+                        <span class="tab-count" id="failingCount">0</span>
+                    </button>
+                    <button class="results-tab" data-tab="all" role="tab" aria-selected="false">
+                        <i class="ri-list-check-2"></i>
+                        All Elements
+                        <span class="tab-count" id="allCount">0</span>
+                    </button>
+                </div>
+
+                <div class="results-table-wrapper">
+                    <table class="results-table" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>Element</th>
+                                <th>Foreground</th>
+                                <th>Background</th>
+                                <th>Ratio</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <!-- Results will be dynamically inserted -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="results-empty" id="resultsEmpty">
+                    <i class="ri-checkbox-circle-line"></i>
+                    <p>All elements pass the selected WCAG criteria!</p>
+                </div>
+
+                <div class="results-actions">
+                    <button class="action-btn" id="highlightAllBtn">
+                        <i class="ri-focus-3-line"></i>
+                        Highlight All Failing
+                    </button>
+                    <button class="action-btn" id="clearHighlightsBtn">
+                        <i class="ri-close-circle-line"></i>
+                        Clear Highlights
+                    </button>
+                    <div class="nav-hint">
+                        <kbd>[</kbd> <kbd>]</kbd> Navigate highlights
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Color Suggestion Modal -->
+        <div class="suggestion-modal" id="suggestionModal" role="dialog" aria-labelledby="suggestion-title"
+            aria-hidden="true">
+            <div class="suggestion-modal-content">
+                <div class="suggestion-modal-header">
+                    <h3 id="suggestion-title">
+                        <i class="ri-magic-line"></i>
+                        Accessible Color Suggestions
+                    </h3>
+                    <button class="modal-close" id="closeSuggestionBtn" aria-label="Close suggestions">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+                <div class="suggestion-modal-body">
+                    <div class="current-colors-preview" id="currentColorsPreview">
+                        <div class="color-preview-box">
+                            <span class="preview-label">Current</span>
+                            <div class="preview-sample" id="currentSample">Sample Text</div>
+                            <div class="preview-info">
+                                <span id="currentRatio">0:1</span>
+                                <span id="currentStatus" class="status-badge">FAIL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="suggested-colors-grid" id="suggestedColorsGrid">
+                        <!-- Suggestions will be dynamically inserted -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Element Highlight Overlay -->
+        <div class="highlight-overlay" id="highlightOverlay" aria-hidden="true">
+            <div class="highlight-info-panel" id="highlightInfoPanel">
+                <div class="highlight-element-info">
+                    <span class="highlight-tag" id="highlightTag">DIV</span>
+                    <span class="highlight-selector" id="highlightSelector">.class-name</span>
+                </div>
+                <div class="highlight-colors">
+                    <span class="highlight-color-chip" id="highlightFg">#000000</span>
+                    <span class="highlight-color-chip" id="highlightBg">#FFFFFF</span>
+                    <span class="highlight-ratio" id="highlightRatio">21:1</span>
+                </div>
+                <div class="highlight-nav">
+                    <button class="highlight-nav-btn" id="prevHighlightBtn" aria-label="Previous element">
+                        <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                    <span class="highlight-counter" id="highlightCounter">1 / 5</span>
+                    <button class="highlight-nav-btn" id="nextHighlightBtn" aria-label="Next element">
+                        <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Color Input Section -->
         <section class="color-input-section" aria-labelledby="color-inputs-heading">
             <h2 id="color-inputs-heading" class="section-title">
@@ -318,6 +489,18 @@
                 <button class="export-btn" id="downloadReportBtn">
                     <i class="ri-file-download-line"></i>
                     <span>Download Report</span>
+                </button>
+                <button class="export-btn" id="exportJsonBtn">
+                    <i class="ri-braces-line"></i>
+                    <span>Export JSON</span>
+                </button>
+                <button class="export-btn" id="exportCsvBtn">
+                    <i class="ri-file-excel-2-line"></i>
+                    <span>Export CSV</span>
+                </button>
+                <button class="export-btn" id="copySummaryBtn">
+                    <i class="ri-clipboard-line"></i>
+                    <span>Copy Summary</span>
                 </button>
             </div>
         </section>
